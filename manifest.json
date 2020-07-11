@@ -1,0 +1,23 @@
+{
+  "name": "Facebook Prevent Link Tracking",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "This extension will – when browsing facebook - remove Facebooks own tracking links and convert them so that you only navigate to the intended destination.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.facebook.com/*"
+      ],
+      "js": [
+        "src/content_script/jquery.min.js",
+        "src/content_script/content_script.js"
+      ]
+    }
+  ]
+}
