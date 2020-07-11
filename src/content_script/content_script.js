@@ -53,15 +53,22 @@ var fbplt_shouldDebug = function () {
  */
 var fbplt_removeFacebookClickIdentifier = function (url) {
 
+	// Remove the fbclid-parmeter from the URL
 	var regex = new RegExp(/\?(.*)(fbclid=[^&]*)(.*)/, 'i');
 	url = url.replace(regex, '?$1$3');
 
-	url = url.replace('?&', '?'); // Quick fix in some cases
-	url = url.replace('&&', '&'); // Quick fix in some cases
+	// Quick fix in some cases, would not been nessecary if by regex skills were better
+	url = url.replace('?&', '?');
+	url = url.replace('&&', '&');
 
+	// Remove trailing ?
 	var regex = new RegExp(/(\?)$/, 'i');
 	url = url.replace(regex, '');
 
+	// Remove trailing &
+	var regex = new RegExp(/(\&)$/, 'i');
+	url = url.replace(regex, '');
+	
 	return url;
 };
 
