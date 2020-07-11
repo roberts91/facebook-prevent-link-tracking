@@ -8,5 +8,4 @@ When a post is shared and contains an outbound link then facebook will convert i
 Sometime they also warn about "You are now leaving facebook", but as long as you know what you're doing this is not relly needed.
 
 ### How does the plugin work?
-
-This plugin is active when on facebook - and it constantly looks for facebooks tracking links. When it finds one it will extract the original URL, and replace the tracking URL with the original URL. Easy!
+This plugin is active when on facebook - and it constantly looks for facebooks tracking links. When it finds one it will extract the original URL, and replace the tracking URL with the original URL. The plugin will also remove the fbclid-parameter from the URL. Easy!
