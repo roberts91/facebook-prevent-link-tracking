@@ -57,7 +57,7 @@ var fbplt_removeFacebookClickIdentifier = function (url) {
 	var regex = new RegExp(/\?(.*)(fbclid=[^&]*)(.*)/, 'i');
 	url = url.replace(regex, '?$1$3');
 
-	// Quick fix in some cases, would not been nessecary if by regex skills were better
+	// Quick fix in some cases, would not been necessary if by regex skills were better
 	url = url.replace('?&', '?');
 	url = url.replace('&&', '&');
 
@@ -68,7 +68,7 @@ var fbplt_removeFacebookClickIdentifier = function (url) {
 	// Remove trailing &
 	var regex = new RegExp(/(\&)$/, 'i');
 	url = url.replace(regex, '');
-	
+
 	return url;
 };
 
