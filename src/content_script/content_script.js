@@ -9,25 +9,6 @@ $(document).ready(function() {
 });
 
 /**
- * Get the URL parameters.
- *
- * @param  {String} url The URL
- * @return {Object}     The URL parameters
- */
-var fbplt_getParams = function (url) {
-	var params = {};
-	var parser = document.createElement('a');
-	parser.href = url;
-	var query = parser.search.substring(1);
-	var vars = query.split('&');
-	for (var i = 0; i < vars.length; i++) {
-		var pair = vars[i].split('=');
-		params[pair[0]] = decodeURIComponent(pair[1]);
-	}
-	return params;
-};
-
-/**
  * Define the interval time used when looking for links to correct.
  *
  * @returns {number}
@@ -53,6 +34,8 @@ var fbplt_shouldDebug = function () {
  */
 var fbplt_removeFacebookClickIdentifier = function (url) {
 
+	if ( ! url ) return url;
+
 	// Remove the fbclid-parmeter from the URL
 	var regex = new RegExp(/\?(.*)(fbclid=[^&]*)(.*)/, 'i');
 	url = url.replace(regex, '?$1$3');
@@ -73,20 +56,58 @@ var fbplt_removeFacebookClickIdentifier = function (url) {
 };
 
 /**
+ * Get the URL parameters.
+ *
+ * @param  {String} url The URL
+ * @return {Object}     The URL parameters
+ */
+var fbplt_getParams = function (url) {
+	var params = {};
+	var parser = document.createElement('a');
+	parser.href = url;
+	var query = parser.search.substring(1);
+	var vars = query.split('&');
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split('=');
+		params[pair[0]] = decodeURIComponent(pair[1]);
+	}
+	return params;
+};
+
+/**
  * Look for outbound links and convert them to regular links (without Facebook-tracking).
  */
 var fbplt_lookForOutboundLinks = function () {
+
+	// Replace links that already has Facebook tracking URL
 	var links = $('a[href^="https://l.facebook.com"]');
-	if ( links.length > 0 && fbplt_shouldDebug() ) console.log('Found ' + links.length + ' links to correct.')
+	if ( links.length > 0 && fbplt_shouldDebug() ) console.log('Found ' + links.length + ' external facebook track links to correct.')
 	links.each(function() {
 		var obj = $(this),
-			href = obj.attr('href'),
-			params = fbplt_getParams(href),
-			u = typeof params.u !== 'undefined' ? params.u : false,
+			url = obj.attr('href'),
+			params = fbplt_getParams(url),
+			u = typeof params.u !== 'undefined' ? params.u : false, // Attempt to extract the original URL
 			u = fbplt_removeFacebookClickIdentifier(u);
 		if ( u ) {
-			if ( fbplt_shouldDebug() ) console.log('Removed tracking from link ' + u);
+			if ( fbplt_shouldDebug() ) console.log('Removed tracking from external facebook track link ' + u);
 			obj.attr('href', u);
+		}
+	});
+
+	// Replace outbound links with a new element so that the URL swap does not happen when clicking on element
+	var externalLinks = $('a:not([href^="https://www.facebook.com"]):not([href^="https://facebook.com"])[href^="http"]:not(.fbplt-fixed)');
+	if ( externalLinks.length > 0 && fbplt_shouldDebug() ) console.log('Found ' + externalLinks.length + ' external links to correct.')
+	externalLinks.each(function() {
+		var obj = $(this),
+			newObject = this.cloneNode(true),
+			newObjectJquery = $(newObject),
+			url = obj.attr('href'),
+			replacedUrl = fbplt_removeFacebookClickIdentifier(url);
+		if ( fbplt_shouldDebug() ) console.log('Removed tracking from external link ' + url);
+		newObjectJquery.addClass('fbplt-fixed');
+		obj.replaceWith(newObject);
+		if ( replacedUrl ) {
+			newObjectJquery.attr('href', replacedUrl);
 		}
 	});
 }

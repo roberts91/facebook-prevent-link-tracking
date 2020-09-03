@@ -1,6 +1,6 @@
 {
   "name": "Facebook Prevent Link Tracking",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "manifest_version": 2,
   "description": "When browsing facebook this extension will find the tracking links and convert them the original URLs.",
   "icons": {
